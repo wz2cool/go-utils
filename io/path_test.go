@@ -46,6 +46,72 @@ func TestFileNotExists(t *testing.T) {
 	}
 }
 
+func TestDirExists(t *testing.T) {
+	err := createTestDir()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	defer deferRemoveTestDir(t)
+
+	exists := FileOrDirExists(testDir)
+	if !exists {
+		t.Errorf("Dir: %s; should exists", testDir)
+		return
+	}
+}
+
+func TestDirNotExists(t *testing.T) {
+	err := removeTestDir()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	exists := FileOrDirExists(testDir)
+	if exists {
+		t.Errorf("Dir: %s; should not exists", testDir)
+		return
+	}
+}
+
+func TestCreateDirIfNotExists(t *testing.T) {
+	// clean dir first
+	err := removeTestDir()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	err = CreateDirIfNotExists(testDir)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	exists := FileOrDirExists(testDir)
+	if !exists {
+		t.Errorf("Dir: %s, should exists", testDir)
+		return
+	}
+}
+
+func TestNotCreateDirIfExists(t *testing.T) {
+	err := createTestDir()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	defer deferRemoveTestDir(t)
+	err = CreateDirIfNotExists(testDir)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+}
+
 func deferRemoveTestFile(t *testing.T) {
 	err := removeTestFile()
 	if err != nil {

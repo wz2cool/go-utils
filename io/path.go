@@ -17,12 +17,9 @@ func FileOrDirExists(path string) bool {
 func CreateDirIfNotExists(path string) error {
 	if _, err := os.Stat(path); err == nil {
 		// path exists
-	} else {
-		// path not exists
-		err := os.MkdirAll(path, 0711)
-		if err != nil {
-			return err
-		}
+		return nil
 	}
-	return nil
+	// path not exists
+	err := os.MkdirAll(path, 0711)
+	return err
 }
