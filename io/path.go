@@ -2,7 +2,7 @@ package io
 
 import "os"
 
-/// FileOrDirExists checking file
+// FileOrDirExists returns a boolean describing if the path of file or directory exists.
 func FileOrDirExists(path string) (bool, error) {
 	_, err := os.Stat(path)
 	if err == nil {
@@ -14,7 +14,8 @@ func FileOrDirExists(path string) (bool, error) {
 	return true, err
 }
 
-/// CreateDirIfNotExists
+// CreateDirIfNotExists creates a direcotry named path,
+// if direcotry not exists, then create it or do nothing.
 func CreateDirIfNotExists(path string) error {
 	if _, err := os.Stat(path); err == nil {
 		// path exists

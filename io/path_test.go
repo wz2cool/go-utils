@@ -36,3 +36,31 @@ func TestFileOrDirExists(t *testing.T) {
 		t.Error("this file should exists")
 	}
 }
+
+func TestCreateDirIfNotExists(t *testing.T) {
+	tempDir := os.TempDir()
+	testDir := filepath.Join(tempDir, "dir1", "dir2")
+	os.RemoveAll(testDir)
+	isExist, err := FileOrDirExists(testDir)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if isExist {
+		t.Error("this dir should not exists")
+	}
+
+	err = CreateDirIfNotExists(testDir)
+	if err != nil {
+		t.Error(err)
+	}
+
+	isExist, err = FileOrDirExists(testDir)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if !isExist {
+		t.Error("this dir should exists")
+	}
+}
