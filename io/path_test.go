@@ -19,11 +19,7 @@ func TestFileExists(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	exists, err := FileOrDirExists(testFile)
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	exists := FileOrDirExists(testFile)
 
 	if !exists {
 		t.Error("file should exists")
@@ -38,7 +34,7 @@ func TestFileNotExists(t *testing.T) {
 		return
 	}
 
-	exists, err := FileOrDirExists(testFile)
+	exists := FileOrDirExists(testFile)
 	if err != nil {
 		t.Error(err)
 		return
