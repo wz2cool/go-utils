@@ -1,66 +1,89 @@
 package io
 
 import (
-	"log"
 	"os"
 	"path/filepath"
 	"testing"
 )
 
-func TestFileOrDirExists(t *testing.T) {
-	tempDir := os.TempDir()
-	testFile := filepath.Join(tempDir, "test.txt")
-	os.Remove(testFile)
-	isExist, err := FileOrDirExists(testFile)
+var tempDir = os.TempDir()
+var testFile = filepath.Join(tempDir, "testFile.txt")
+var testParentDir = filepath.Join(tempDir, "testParentDir")
+var testDir = filepath.Join(testParentDir, "testDir")
+
+func TestFileExists(t *testing.T) {
+	err := createTestFile()
+	defer deferRemoveTestFile(t)
+
 	if err != nil {
 		t.Error(err)
+		return
 	}
-
-	if isExist {
-		t.Error("this file should not exists")
-	}
-
-	log.Println(testFile)
-	// create file for testing.
-	fs, err := os.Create(testFile)
+	exists, err := FileOrDirExists(testFile)
 	if err != nil {
 		t.Error(err)
-	}
-	defer fs.Close()
-	isExist, err = FileOrDirExists(testFile)
-	if err != nil {
-		t.Error(err)
+		return
 	}
 
-	if !isExist {
-		t.Error("this file should exists")
+	if !exists {
+		t.Error("file should exists")
+		return
 	}
 }
 
-func TestCreateDirIfNotExists(t *testing.T) {
-	tempDir := os.TempDir()
-	testDir := filepath.Join(tempDir, "dir1", "dir2")
-	os.RemoveAll(testDir)
-	isExist, err := FileOrDirExists(testDir)
+func TestFileNotExists(t *testing.T) {
+	err := removeTestFile()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	exists, err := FileOrDirExists(testFile)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	if exists {
+		t.Error("file should not exists")
+		return
+	}
+}
+
+func deferRemoveTestFile(t *testing.T) {
+	err := removeTestFile()
 	if err != nil {
 		t.Error(err)
 	}
+}
 
-	if isExist {
-		t.Error("this dir should not exists")
-	}
-
-	err = CreateDirIfNotExists(testDir)
+func deferRemoveTestDir(t *testing.T) {
+	err := removeTestDir()
 	if err != nil {
 		t.Error(err)
 	}
+}
 
-	isExist, err = FileOrDirExists(testDir)
+func createTestFile() error {
+	fs, err := os.Create(testFile)
+	defer fs.Close()
+	return err
+}
+
+func removeTestFile() error {
+	// create file again, the simplest way to avoid file not found issue.
+	err := createTestFile()
 	if err != nil {
-		t.Error(err)
+		return err
 	}
 
-	if !isExist {
-		t.Error("this dir should exists")
-	}
+	return os.Remove(testFile)
+}
+
+func createTestDir() error {
+	return os.MkdirAll(testDir, 0711)
+}
+
+func removeTestDir() error {
+	return os.RemoveAll(testParentDir)
 }
