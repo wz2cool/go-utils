@@ -1,6 +1,9 @@
 package io
 
-import "os"
+import (
+	"io"
+	"os"
+)
 
 // FileOrDirExists returns a boolean describing if the path of file or directory exists.
 func FileOrDirExists(path string) bool {
@@ -22,4 +25,19 @@ func CreateDirIfNotExists(path string) error {
 	// path not exists
 	err := os.MkdirAll(path, 0711)
 	return err
+}
+
+// IsDirEmpty returns a boolean describing if directory is empty.
+func IsDirEmpty(path string) (bool, error) {
+	f, err := os.Open(path)
+	if err != nil {
+		return false, err
+	}
+	defer f.Close()
+
+	_, err = f.Readdir(1)
+	if err == io.EOF {
+		return true, nil
+	}
+	return false, err
 }
