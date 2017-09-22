@@ -56,7 +56,7 @@ func TestCopyFileDistFileNotFound(t *testing.T) {
 		return
 	}
 	defer deferRemoveTestFile(t)
-	err = CopyFile(testFile, `notfoundDriver:\test`)
+	err = CopyFile(testFile, `notfoundDriver:/*\test`)
 	if err == nil {
 		t.Error("file should not found")
 		return
