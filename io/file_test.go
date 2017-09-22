@@ -35,6 +35,34 @@ func TestCopyFile(t *testing.T) {
 	}
 }
 
+func TestCopyFileSourceFileNotFound(t *testing.T) {
+	err := removeTestFile()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	err = CopyFile("noFile", "noFile")
+	if err == nil {
+		t.Error("file should not found")
+		return
+	}
+}
+
+func TestCopyFileDistFileNotFound(t *testing.T) {
+	err := createTestFile()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	defer deferRemoveTestFile(t)
+	err = CopyFile(testFile, `notfoundDriver:\test`)
+	if err == nil {
+		t.Error("file should not found")
+		return
+	}
+}
+
 func TestGetMD5(t *testing.T) {
 	err := removeTestFile()
 	if err != nil {
