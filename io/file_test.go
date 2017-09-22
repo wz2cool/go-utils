@@ -104,6 +104,46 @@ func TestGetMD5FileNotFound(t *testing.T) {
 	}
 }
 
+func TestGetFileSize(t *testing.T) {
+	err := removeTestFile()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	err = createFileForTestingMD5(testFile, "Hello world")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	defer removeTestFile()
+
+	size, err := GetFileSize(testFile)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	if size <= 0 {
+		t.Error("file size should greater than 0")
+		return
+	}
+}
+
+func TestGetFileSizeFileNotFound(t *testing.T) {
+	err := removeTestFile()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	_, err = GetFileSize(testFile)
+	if err == nil {
+		t.Error("File should not found")
+		return
+	}
+}
+
 func createFileForTestingMD5(filePath, content string) error {
 	fileDir := filepath.Dir(filePath)
 	err := CreateDirIfNotExists(fileDir)

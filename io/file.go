@@ -63,3 +63,12 @@ func GetFileMD5(filePath string) (string, error) {
 	}
 	return fmt.Sprintf("%x", md5Hash.Sum([]byte(""))), nil
 }
+
+// GetFileSize returns size of file.
+func GetFileSize(path string) (int64, error) {
+	f, err := os.Stat(path)
+	if err != nil {
+		return 0, err
+	}
+	return f.Size(), nil
+}
