@@ -18,6 +18,7 @@ func TestFileExists(t *testing.T) {
 		t.Error("file should exists")
 		return
 	}
+
 }
 
 func TestFileNotExists(t *testing.T) {
