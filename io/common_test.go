@@ -48,3 +48,16 @@ func createTestDir() error {
 func removeTestDir() error {
 	return os.RemoveAll(testParentDir)
 }
+
+func clearnTestDir() error {
+	err := removeTestDir()
+	if err != nil {
+		return err
+	}
+
+	err = createTestDir()
+	if err != nil {
+		return err
+	}
+	return nil
+}
