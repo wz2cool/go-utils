@@ -62,6 +62,20 @@ func TestGetMD5(t *testing.T) {
 	}
 }
 
+func TestGetMD5FileNotFound(t *testing.T) {
+	err := removeTestFile()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	_, err = GetFileMD5(testFile)
+	if err == nil {
+		t.Error("should have error")
+		return
+	}
+}
+
 func createFileForTestingMD5(filePath, content string) error {
 	fileDir := filepath.Dir(filePath)
 	err := CreateDirIfNotExists(fileDir)
